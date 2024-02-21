@@ -42,9 +42,9 @@ namespace MarnaDomain.Entities
             return Salary * bimePercentage;
         }
 
-        public decimal CalculateNetSalary()
+        public decimal CalculateNetSalary(decimal taxPercentage, decimal bimePercentage)
         {
-            TotalDeductions = CalculateIncomeTax() + CalculateInsurance();
+            TotalDeductions = CalculateIncomeTax(taxPercentage) + CalculateInsurance(bimePercentage);
             TotalEarnings = TotalEarnings - TotalDeductions;
             return TotalEarnings;
         }

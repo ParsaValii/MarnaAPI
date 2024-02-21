@@ -100,6 +100,22 @@ namespace MarnaAPI.Controllers
             return NoContent();
         }
 
+        // GET: api/Admin/5
+        [HttpPut]
+        public async Task<ActionResult> SetTotalDeductions(Guid id, decimal taxPercentage, decimal bimePercentage)
+        {
+            var employee = await _context.Employees.FindAsync(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            employee.CalculateNetSalary(taxPercentage, bimePercentage);
+            _context.Entry(employee).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
         private bool EmployeeExists(Guid id)
         {
             return _context.Employees.Any(e => e.Id == id);
