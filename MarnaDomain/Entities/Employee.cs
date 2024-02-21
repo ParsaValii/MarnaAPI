@@ -14,6 +14,7 @@ namespace MarnaDomain.Entities
         public required string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public required string NationalId { get; set; }
+        public int Experience { get; set; }
 
         // Job Info
         public required string Position { get; set; }
