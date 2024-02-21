@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MarnaDomain;
 using MarnaDomain.Entities;
+using MarnaApplication.Dtos.AdminDtos;
 
 namespace MarnaAPI.Controllers
 {
@@ -102,7 +103,7 @@ namespace MarnaAPI.Controllers
 
         // GET: api/Admin/5
         [HttpPut]
-        public async Task<ActionResult> SetTotalDeductions(Guid id, decimal taxPercentage, decimal bimePercentage)
+        public async Task<ActionResult> SetTotalDeductions(Guid id, [FromBody] PutSetTotalDeductionsDto TotalDeductionsDto)
         {
             var employee = await _context.Employees.FindAsync(id);
 
@@ -110,7 +111,7 @@ namespace MarnaAPI.Controllers
             {
                 return NotFound();
             }
-            employee.CalculateNetSalary(taxPercentage, bimePercentage);
+            employee.CalculateNetSalary(TotalDeductionsDto.TaxPercentage, TotalDeductionsDto.BimePercentage);
             _context.Entry(employee).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return Ok();
