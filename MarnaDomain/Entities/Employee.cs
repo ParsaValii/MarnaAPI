@@ -49,7 +49,5 @@ namespace MarnaDomain.Entities
             TotalEarnings = TotalEarnings - TotalDeductions;
             return TotalEarnings;
         }
-
-
     }
 }
