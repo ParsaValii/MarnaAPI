@@ -14,40 +14,16 @@ namespace MarnaDomain.Entities
         public required string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public required string NationalId { get; set; }
+        public required string Email { get; set; }
+        public required string Address { get; set; }
+        public required string BankAcountNumber { get; set; }
+        public DateTime EmploymentStartDate { get; set; }
+        public decimal Salary { get; set; }
         public int Experience { get; set; }
 
-        // Job Info
-        public required string Position { get; set; }
-        public DateTime HireDate { get; set; }
-        public decimal Salary { get; set; }
-
-        // Bank Info
-        public required string BankAccountNumber { get; set; }
-        public required string BankName { get; set; }
-
-        // Mali Info
-        public decimal TotalEarnings { get; set; }  
-        public decimal TotalDeductions { get; set; }  
-
-        // Other
-        public bool IsActive { get; set; }
-
-        //Methods
-        public decimal CalculateIncomeTax(decimal taxPercentage)
-        { 
-            return TotalEarnings * taxPercentage;
-        }
-
-        public decimal CalculateInsurance(decimal bimePercentage)
-        {
-            return Salary * bimePercentage;
-        }
-
-        public decimal CalculateNetSalary(decimal taxPercentage, decimal bimePercentage)
-        {
-            TotalDeductions = CalculateIncomeTax(taxPercentage) + CalculateInsurance(bimePercentage);
-            TotalEarnings = TotalEarnings - TotalDeductions;
-            return TotalEarnings;
+        public Employee()
+        {   
+            EmploymentStartDate = DateTime.Now;
         }
     }
 }
