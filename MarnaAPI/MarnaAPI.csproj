@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MarnaApplication\MarnaApplication.csproj" />
+    <ProjectReference Include="..\MarnaDomain\MarnaDomain.csproj" />
   </ItemGroup>
 
 </Project>
