@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MarnaDomain.Entities
@@ -17,9 +18,14 @@ namespace MarnaDomain.Entities
         public required string Email { get; set; }
         public required string Address { get; set; }
         public required string BankAcountNumber { get; set; }
-        public DateTime EmploymentStartDate { get; set; } = DateTime.Now;
+        public DateTime EmploymentStartDate { get; set; }
         public decimal Salary { get; set; }
         public int Experience { get; set; }
-        public IList<OverTime> OverTimeRecords { get; set; } = [];
+        public IList<OverTime> OverTimeRecords { get; set; }
+        public Employee()
+        {
+            EmploymentStartDate = DateTime.Now;
+            OverTimeRecords = new List<OverTime>();
+        }
     }
 }

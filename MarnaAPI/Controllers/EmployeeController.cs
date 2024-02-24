@@ -20,7 +20,7 @@ namespace MarnaAPI.Controllers
         {
             _context = context;
         }
-        [HttpPost("AddOverTime")]
+        [HttpPut("AddOverTime")]
         public async Task<ActionResult<IEnumerable<OverTime>>> OverTime(OverTimeDto overTime)
         {
             var employee = await _context.Employees.FindAsync(overTime.Id);

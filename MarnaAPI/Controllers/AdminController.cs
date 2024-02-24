@@ -24,17 +24,18 @@ namespace MarnaAPI.Controllers
         }
 
         // GET: api/Admin
-        [HttpGet]
+        [HttpGet("GetAllEmployees")]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
-            return await _context.Employees.ToListAsync();
+            var employees = await _context.Employees.Include(e => e.OverTimeRecords).ToListAsync();
+            return employees;
         }
 
         // GET: api/Admin/5
-        [HttpGet("{id}")]
+        [HttpGet("GetOneEmployee{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(Guid id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _context.Employees.Include(e => e.OverTimeRecords).FirstOrDefaultAsync(x => x.Id==id);
 
             if (employee == null)
             {
@@ -46,7 +47,7 @@ namespace MarnaAPI.Controllers
 
         // PUT: api/Admin/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("UpdateEmployee{id}")]
         public async Task<IActionResult> PutEmployee(Guid id, Employee employee)
         {
             if (id != employee.Id)
@@ -77,7 +78,7 @@ namespace MarnaAPI.Controllers
 
         // POST: api/Admin
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("AddEmployee")]
         public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
         {
             _context.Employees.Add(employee);
@@ -87,7 +88,7 @@ namespace MarnaAPI.Controllers
         }
 
         // DELETE: api/Admin/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteEmployee{id}")]
         public async Task<IActionResult> DeleteEmployee(Guid id)
         {
             var employee = await _context.Employees.FindAsync(id);
