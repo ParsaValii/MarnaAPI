@@ -17,13 +17,9 @@ namespace MarnaDomain.Entities
         public required string Email { get; set; }
         public required string Address { get; set; }
         public required string BankAcountNumber { get; set; }
-        public DateTime EmploymentStartDate { get; set; }
+        public DateTime EmploymentStartDate { get; set; } = DateTime.Now;
         public decimal Salary { get; set; }
         public int Experience { get; set; }
-
-        public Employee()
-        {   
-            EmploymentStartDate = DateTime.Now;
-        }
+        public IList<OverTime> OverTimeRecords { get; set; } = [];
     }
 }
