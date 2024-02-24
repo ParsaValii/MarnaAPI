@@ -8,7 +8,7 @@ namespace MarnaDomain.Entities
     public class OverTime
     {
         public Guid Id { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
         public decimal HoursWorked { get; set; }
     }
 }
