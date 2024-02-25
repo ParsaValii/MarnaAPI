@@ -9,6 +9,8 @@ using MarnaDomain;
 using MarnaDomain.Entities;
 using MarnaApplication.Extentions;
 using MarnaApplication.Dtos.AdminDtos;
+using MarnaApplication.Services;
+using MarnaApplication.Interfaces;
 
 namespace MarnaAPI.Controllers
 {
@@ -17,26 +19,27 @@ namespace MarnaAPI.Controllers
     public class AdminController : ControllerBase
     {
         private readonly MarnaDbContext _context;
+        private readonly IEmployeeService _employeeService;
 
-        public AdminController(MarnaDbContext context)
+        public AdminController(MarnaDbContext context, IEmployeeService employeeService)
         {
             _context = context;
+            _employeeService = employeeService;
         }
 
         // GET: api/Admin
         [HttpGet("GetAllEmployees")]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
-            var employees = await _context.Employees.Include(e => e.OverTimeRecords).ToListAsync();
-            return employees;
+            var employees = await _employeeService.GetAllEmployees();
+            return Ok(employees);
         }
 
         // GET: api/Admin/5
         [HttpGet("GetOneEmployee{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(Guid id)
         {
-            var employee = await _context.Employees.Include(e => e.OverTimeRecords).FirstOrDefaultAsync(x => x.Id == id);
-
+            var employee = await _employeeService.GetEmployee(id);
             if (employee == null)
             {
                 return NotFound();
@@ -48,18 +51,18 @@ namespace MarnaAPI.Controllers
         // PUT: api/Admin/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("UpdateEmployee{id}")]
-        public async Task<IActionResult> PutEmployee(Guid id, Employee employee)
+        public async Task<IActionResult> UpdateEmployee(Guid id, Employee employee)
         {
             if (id != employee.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(employee).State = EntityState.Modified;
+            _employeeService.UpdateEmployee(employee);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _employeeService.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,10 +82,10 @@ namespace MarnaAPI.Controllers
         // POST: api/Admin
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddEmployee")]
-        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
+        public async Task<ActionResult<Employee>> AddEmployee(Employee employee)
         {
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
+            await _employeeService.InsertEmployee(employee);
+            await _employeeService.Save();
 
             return CreatedAtAction("GetEmployee", new { id = employee.Id }, employee);
         }
@@ -91,37 +94,31 @@ namespace MarnaAPI.Controllers
         [HttpDelete("DeleteEmployee{id}")]
         public async Task<IActionResult> DeleteEmployee(Guid id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
+            await _employeeService.DeleteEmployee(id);
+            await _employeeService.Save();
 
             return NoContent();
         }
         [HttpPost("changeSalary")]
         public async Task<ActionResult<Employee>> ChangeSalary(ChangeSalaryDto changeSalaryDto)
         {
-            var employee = await _context.Employees.FindAsync(changeSalaryDto.Id);
+            var employee = await _employeeService.GetEmployee(changeSalaryDto.Id);
             employee.ChangeSalary(changeSalaryDto.percentage);
-            _context.Entry(employee).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            _employeeService.UpdateEmployee(employee);
+            await _employeeService.Save();
             return Ok(employee);
         }
         [HttpGet("getEmployeeExperiance")]
         public async Task<ActionResult<double>> GetEmployeeExperiance(Guid id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _employeeService.GetEmployee(id);
             var Experience = employee.Experience;
             return Ok(Experience);
         }
         [HttpGet("getEmployeeOverTimeRecords")]
         public async Task<ActionResult<IEnumerable<OverTime>>> GetEmployeeOverTimeRecords(Guid id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _employeeService.GetEmployee(id);
             return Ok(employee.OverTimeRecords);
         }
         private bool EmployeeExists(Guid id)

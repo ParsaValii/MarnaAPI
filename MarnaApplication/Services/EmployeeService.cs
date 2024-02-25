@@ -42,7 +42,7 @@ namespace MarnaApplication.Services
 
         public async Task<Employee> GetEmployee(Guid Id)
         {
-            var employee = await _context.Employees.FindAsync(Id);
+            var employee = await _context.Employees.Include(x => x.OverTimeRecords).FirstOrDefaultAsync(x => x.Id == Id);
             if (employee == null)
             {
                 return null;
