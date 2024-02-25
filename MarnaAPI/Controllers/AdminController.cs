@@ -35,7 +35,7 @@ namespace MarnaAPI.Controllers
         [HttpGet("GetOneEmployee{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(Guid id)
         {
-            var employee = await _context.Employees.Include(e => e.OverTimeRecords).FirstOrDefaultAsync(x => x.Id==id);
+            var employee = await _context.Employees.Include(e => e.OverTimeRecords).FirstOrDefaultAsync(x => x.Id == id);
 
             if (employee == null)
             {
@@ -111,14 +111,12 @@ namespace MarnaAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(employee);
         }
-        [HttpPost("changeEmployeeExperience")]
-        public async Task<ActionResult<Employee>> ChangeEmployeeExperience(ChangeEmployeeExperienceDto changeEmployeeExperienceDto)
+        [HttpGet("getEmployeeExperiance")]
+        public async Task<ActionResult<double>> GetEmployeeExperiance(Guid id)
         {
-            var employee = await _context.Employees.FindAsync(changeEmployeeExperienceDto.Id);
-            employee.ChangeEmployeeExperience(changeEmployeeExperienceDto.years);
-            _context.Entry(employee).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return Ok(employee);
+            var employee = await _context.Employees.FindAsync(id);
+            var Experience = employee.Experience;
+            return Ok(Experience);
         }
         [HttpGet("getEmployeeOverTimeRecords")]
         public async Task<ActionResult<IEnumerable<OverTime>>> GetEmployeeOverTimeRecords(Guid id)

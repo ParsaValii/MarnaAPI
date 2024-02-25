@@ -20,7 +20,8 @@ namespace MarnaDomain.Entities
         public required string BankAcountNumber { get; set; }
         public DateTime EmploymentStartDate { get; set; }
         public decimal Salary { get; set; }
-        public int Experience { get; set; }
+        public double Experience =>
+            (DateTime.Now - EmploymentStartDate).TotalDays / 365;
         public IList<OverTime> OverTimeRecords { get; set; }
         public Employee()
         {

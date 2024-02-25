@@ -12,9 +12,5 @@ namespace MarnaApplication.Extentions
         {
             employee.Salary += (employee.Salary * (decimal)percentage) / 100;
         }
-        public static void ChangeEmployeeExperience(this Employee employee, int years)
-        {
-            employee.Experience = years;
-        }
     }
 }
