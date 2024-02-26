@@ -57,25 +57,8 @@ namespace MarnaAPI.Controllers
             {
                 return BadRequest();
             }
-
             _employeeService.UpdateEmployee(employee);
-
-            try
-            {
-                await _employeeService.Save();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmployeeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _employeeService.Save();
             return NoContent();
         }
 
@@ -107,23 +90,6 @@ namespace MarnaAPI.Controllers
             _employeeService.UpdateEmployee(employee);
             await _employeeService.Save();
             return Ok(employee);
-        }
-        [HttpGet("getEmployeeExperiance")]
-        public async Task<ActionResult<double>> GetEmployeeExperiance(Guid id)
-        {
-            var employee = await _employeeService.GetEmployee(id);
-            var Experience = employee.Experience;
-            return Ok(Experience);
-        }
-        [HttpGet("getEmployeeOverTimeRecords")]
-        public async Task<ActionResult<IEnumerable<OverTime>>> GetEmployeeOverTimeRecords(Guid id)
-        {
-            var employee = await _employeeService.GetEmployee(id);
-            return Ok(employee.OverTimeRecords);
-        }
-        private bool EmployeeExists(Guid id)
-        {
-            return _context.Employees.Any(e => e.Id == id);
         }
     }
 }

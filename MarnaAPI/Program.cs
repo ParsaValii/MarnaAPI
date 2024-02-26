@@ -1,4 +1,6 @@
 using Hangfire;
+using MarnaApplication.Interfaces;
+using MarnaApplication.Services;
 using MarnaDomain;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<MarnaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MarnaDbContext")));
+
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 var app = builder.Build();
 
