@@ -91,5 +91,24 @@ namespace MarnaAPI.Controllers
             await _employeeService.Save();
             return Ok(employee);
         }
+        [HttpPut("GetEmployeeAllOverTime")]
+        public async Task<IActionResult> GetEmployeeAllOverTime(GetEmployeeAllOverTimeDto request)
+        {
+            decimal TotalTime = 0;
+            var employee = await _employeeService.GetEmployee(request.Id);
+
+            foreach (var item in employee.OverTimeRecords)
+            {
+                if (item.Date.DayOfYear + 30 >= DateTime.Now.DayOfYear)
+                {
+                    TotalTime += item.HoursWorked;
+                }
+            }
+            decimal TotalOverTimePayment = TotalTime * request.price;
+            employee.Salary += TotalOverTimePayment;
+            _employeeService.UpdateEmployee(employee);
+            await _employeeService.Save();
+            return Ok(TotalTime);
+        }
     }
 }
